@@ -18,15 +18,17 @@ function parseMarkdown(markdownText) {
 	const htmlText = markdownText
 		.replace(/!\[(.*?)\]\((.*?)\)/gm, "<img alt='$1' src='$2' />")
 		.replace(/\[(.*?)\]\((.*?)\)/gm, "<a href='$2' target='blank'>$1</a>")//markdown links
-		.replace(/^### (.*?$)/gm, "<h3>$1</h3>")
-		.replace(/^## (.*?$)/gm, '<h2>$1</h2>')
-		.replace(/^# (.*?$)/gm, '<h1>$1</h1>')
-		.replace(/^\* (.*?$)/gm, '<li>$1</li>')
-		.replace(/^\> (.*?$)/gm, '<blockquote>$1</blockquote>')
+		.replace(/^\s*### (.*?$)/gm, "<h3>$1</h3>")
+		.replace(/^\s*## (.*?$)/gm, '<h2>$1</h2>')
+		.replace(/^\s*# (.*?$)/gm, '<h1>$1</h1>')
+		.replace(/^\s*\* (.*?$)/gm, '<li>$1</li>')
+		.replace(/^\s*\> (.*?$)/gm, '<blockquote>$1</blockquote>')
 		.replace(/```(\w+\n)?(.+?)```/gsm,  function (x,y,z) {code.push(z); return '<pre><code>#__code' + codeIdx++  + '__#</code></pre>'; })
 		.replace(/`([^`]+)`/gm, '<code>$1</code>')
 		.replace(/\*\*([^<>]+?)\*\*/gm, '<b>$1</b>')
+		.replace(/__([^<>]+?)__/gm, '<strong>$1</strong>')
 		.replace(/\*([^<>]+?)\*/gm, '<i>$1</i>')
+		.replace(/^\s*-{3,}$/gm, '<hr />')
 		.replace(/\n(.+)$/gm, '<p>$1</p>')//paragraphs
 		.replace(/\n$/gm, '<br />')
 		.replace(/(\b(?<!['"])(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim, '<a href="$1" target="blank">$1</a>')//html links
@@ -54,6 +56,7 @@ html.innerHTML = parseMarkdown(textarea.value);
 		line-height:24px;
 		margin:0;
 		padding:0;
+		color:#24292f;
 	}
 	
 	img {
@@ -92,6 +95,18 @@ html.innerHTML = parseMarkdown(textarea.value);
 		display: block;
 		padding:0rem;
 		padding-left: 1rem;
+	}
+	
+	h1, h2 {
+		border-bottom:1px solid #eee;
+		padding-bottom:0.5em;
+		margin-bottom: 1rem;
+	}
+	
+	hr{
+		border:0;
+		background:#eee;
+		height:0.3rem;
 	}
 	
 	#save {
